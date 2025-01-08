@@ -44,7 +44,6 @@ export class OrderService {
       if (process.env.DATABASE_DRIVER === 'mongodb') {
         await selectedFilm.save();
       } else {
-        console.log('Updated selectedFilm:', selectedFilm);
         await this.filmsPostgresRepository.save(selectedFilm);
       }
     }
