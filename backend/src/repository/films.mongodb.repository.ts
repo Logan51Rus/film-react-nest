@@ -2,7 +2,7 @@ import { NotFoundException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { GetFilmDto } from 'src/films/dto/films.dto';
-import { Film } from 'src/films/films.schema';
+import { Film } from 'src/films/schemas/films.schema';
 import { GetScheduleDto } from 'src/films/dto/schedule.dto';
 
 @Injectable()
@@ -30,7 +30,7 @@ export class FilmsMongoDbRepository {
 
   async getAllFilms(): Promise<{ total: number; items: GetFilmDto[] }> {
     const films = await this.filmModel.find({});
-    const total = await this.filmModel.countDocuments({});
+    const total = films.length;
 
     return {
       total: total,

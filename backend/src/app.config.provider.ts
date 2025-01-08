@@ -7,7 +7,11 @@ export const configProvider = {
     //TODO прочесть переменнные среды
     database: {
       driver: process.env.DATABASE_DRIVER || 'mongodb',
-      url: process.env.DATABASE_URL || 'mongodb://localhost:27017/afisha',
+      url:
+        process.env.DATABASE_DRIVER === 'postgres'
+          ? process.env.POSTGRES_URL ||
+            'postgres://developer:developer@localhost:5432/film_project'
+          : process.env.DATABASE_URL || 'mongodb://localhost:27017/afisha',
     },
   },
 };
