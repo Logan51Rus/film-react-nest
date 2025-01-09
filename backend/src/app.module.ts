@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { ConfigModule } from '@nestjs/config';
 import * as path from 'node:path';
-import { MongooseModule } from '@nestjs/mongoose';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { configProvider } from './app.config.provider';
@@ -10,8 +9,6 @@ import { FilmsController } from './films/films.controller';
 import { FilmsService } from './films/films.service';
 import { OrderController } from './order/order.controller';
 import { OrderService } from './order/order.service';
-import { FilmsMongoDbRepository } from './repository/films.mongodb.repository';
-import { Film, FilmSchema } from './films/schemas/films.schema';
 import { ScheduleEntity } from './films/entities/Schedule.entity';
 import { FilmEntity } from './films/entities/Film.entity';
 import { FilmsPostgresSQLRepository } from './repository/films.postgres.repository';
@@ -22,10 +19,6 @@ import { FilmsPostgresSQLRepository } from './repository/films.postgres.reposito
       isGlobal: true,
       cache: true,
     }),
-    //Подключение Mongoose для работы с MongoDB
-    MongooseModule.forRoot(process.env.DATABASE_URL),
-    MongooseModule.forFeature([{ name: Film.name, schema: FilmSchema }]),
-
     //Подключение TypeORM для работы с PostgresSQL
     TypeOrmModule.forRoot({
       type: 'postgres',
@@ -48,7 +41,6 @@ import { FilmsPostgresSQLRepository } from './repository/films.postgres.reposito
     configProvider,
     FilmsService,
     OrderService,
-    FilmsMongoDbRepository,
     FilmsPostgresSQLRepository,
   ],
 })

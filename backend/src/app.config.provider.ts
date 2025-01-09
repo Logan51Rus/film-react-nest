@@ -4,14 +4,16 @@ export const configProvider = {
   imports: [ConfigModule.forRoot()],
   provide: 'CONFIG',
   useValue: <AppConfig>{
-    //TODO прочесть переменнные среды
     database: {
-      driver: process.env.DATABASE_DRIVER || 'mongodb',
+      driver: process.env.DATABASE_DRIVER || 'postgres',
       url:
-        process.env.DATABASE_DRIVER === 'postgres'
-          ? process.env.POSTGRES_URL ||
-            'postgres://developer:developer@localhost:5432/film_project'
-          : process.env.DATABASE_URL || 'mongodb://localhost:27017/afisha',
+        process.env.DATABASE_URL ||
+        'postgres://developer:developer@localhost:5432/film_project',
+      host: process.env.DATABASE_HOST || 'localhost',
+      port: process.env.DATABASE_PORT || 5432,
+      user: process.env.DATABASE_USER || 'developer',
+      password: process.env.DATABASE_USER || 'developer',
+      name: process.env.DATABASE_NAME || 'film_project',
     },
   },
 };
@@ -23,4 +25,9 @@ export interface AppConfig {
 export interface AppConfigDatabase {
   driver: string;
   url: string;
+  host: string;
+  port: number;
+  user: string;
+  password: string;
+  name: string;
 }

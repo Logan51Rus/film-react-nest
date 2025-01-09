@@ -32,7 +32,7 @@ export class ScheduleEntity {
   price: number;
 
   @Column('text')
-  taken: string[];
+  taken: string;
 
   @ManyToOne(() => FilmEntity, (film) => film.schedule)
   @JoinColumn({ name: 'filmId' })
