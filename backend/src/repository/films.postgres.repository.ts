@@ -1,13 +1,12 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, Inject, NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
-import { InjectRepository } from '@nestjs/typeorm';
 import { FilmEntity } from 'src/films/entities/Film.entity';
 import { ScheduleEntity } from 'src/films/entities/Schedule.entity';
 
 @Injectable()
 export class FilmsPostgresSQLRepository {
   constructor(
-    @InjectRepository(FilmEntity)
+    @Inject('FILM_REPOSITORY')
     private readonly filmRepository: Repository<FilmEntity>,
   ) {}
 
@@ -27,7 +26,7 @@ export class FilmsPostgresSQLRepository {
     };
   }
 
-  async findFilmById(id: string) {
+  async findFilmById(id: string): Promise<FilmEntity> {
     const film = await this.filmRepository.findOne({
       where: {
         id,

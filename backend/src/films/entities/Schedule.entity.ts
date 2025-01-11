@@ -1,37 +1,47 @@
 import {
   Entity,
-  Column,
+  ManyToOne,
   PrimaryColumn,
   Generated,
+  Column,
   JoinColumn,
-  ManyToOne,
 } from 'typeorm';
-import { FilmEntity } from './Film.entity';
+import { FilmEntity } from './film.entity';
 
 @Entity('schedules')
 export class ScheduleEntity {
-  @PrimaryColumn({
-    unique: true,
-  })
+  @PrimaryColumn()
   @Generated('uuid')
   id: string;
 
-  @Column({ type: 'double precision' })
+  @Column({
+    type: 'varchar',
+  })
   daytime: string;
 
-  @Column({ type: 'integer' })
+  @Column({
+    type: 'integer',
+  })
   hall: number;
 
-  @Column({ type: 'integer' })
+  @Column({
+    type: 'integer',
+  })
   rows: number;
 
-  @Column({ type: 'integer' })
+  @Column({
+    type: 'integer',
+  })
   seats: number;
 
-  @Column({ type: 'double precision' })
+  @Column({
+    type: 'double precision',
+  })
   price: number;
 
-  @Column('text')
+  @Column({
+    type: 'text',
+  })
   taken: string;
 
   @ManyToOne(() => FilmEntity, (film) => film.schedule)

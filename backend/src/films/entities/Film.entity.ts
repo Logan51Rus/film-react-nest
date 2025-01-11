@@ -1,11 +1,9 @@
-import { Entity, Column, PrimaryColumn, Generated, OneToMany } from 'typeorm';
-import { ScheduleEntity } from './Schedule.entity';
+import { OneToMany, Entity, PrimaryColumn, Generated, Column } from 'typeorm';
+import { ScheduleEntity } from './schedule.entity';
 
 @Entity('films')
 export class FilmEntity {
-  @PrimaryColumn({
-    unique: true,
-  })
+  @PrimaryColumn()
   @Generated('uuid')
   id: string;
 
@@ -22,7 +20,7 @@ export class FilmEntity {
   @Column({
     type: 'text',
   })
-  tags: string[];
+  tags: string;
 
   @Column({
     type: 'varchar',
@@ -49,6 +47,8 @@ export class FilmEntity {
   })
   description: string;
 
-  @OneToMany(() => ScheduleEntity, (schedule) => schedule.film)
+  @OneToMany(() => ScheduleEntity, (schedule) => schedule.film, {
+    cascade: true,
+  })
   schedule: ScheduleEntity[];
 }

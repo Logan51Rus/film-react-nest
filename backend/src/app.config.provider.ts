@@ -1,19 +1,19 @@
 import { ConfigModule } from '@nestjs/config';
 
+const applicationConfig = process.env;
+
 export const configProvider = {
   imports: [ConfigModule.forRoot()],
   provide: 'CONFIG',
   useValue: <AppConfig>{
     database: {
-      driver: process.env.DATABASE_DRIVER || 'postgres',
-      url:
-        process.env.DATABASE_URL ||
-        'postgres://developer:developer@localhost:5432/film_project',
-      host: process.env.DATABASE_HOST || 'localhost',
-      port: process.env.DATABASE_PORT || 5432,
-      user: process.env.DATABASE_USER || 'developer',
-      password: process.env.DATABASE_USER || 'developer',
-      name: process.env.DATABASE_NAME || 'film_project',
+      driver: applicationConfig.DATABASE_DRIVER,
+      url: applicationConfig.DATABASE_URL,
+      host: applicationConfig.DATABASE_HOST,
+      port: +applicationConfig.DATABASE_PORT,
+      user: applicationConfig.DATABASE_USER,
+      password: applicationConfig.DATABASE_PASSWORD,
+      name: applicationConfig.DATABASE_NAME,
     },
   },
 };
