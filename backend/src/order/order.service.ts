@@ -1,31 +1,63 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  BadRequestException,
+  Injectable,
+  Inject,
+} from '@nestjs/common';
 import { createOrderDto } from './dto/order.dto';
-import { Schedule } from 'src/films/films.schema';
+import { FilmsPostgresSQLRepository } from 'src/repository/films.postgres.repository';
 import { FilmsMongoDbRepository } from 'src/repository/films.mongodb.repository';
+import { AppConfig } from 'src/app.config.provider';
 
 @Injectable()
 export class OrderService {
-  constructor(private readonly filmsRepository: FilmsMongoDbRepository) {}
+  constructor(
+    @Inject('CONFIG') private readonly config: AppConfig,
+    private readonly filmsMongoRepository: FilmsMongoDbRepository,
+    private readonly filmsPostgresRepository: FilmsPostgresSQLRepository,
+  ) {}
 
   async placeOrder(orderDto: createOrderDto) {
     const { tickets } = orderDto;
 
     for (const ticket of tickets) {
       const { film, session, row, seat } = ticket;
-      const selectedFilm = await this.filmsRepository.findFilmById(film);
+      let selectedFilm;
 
-      const schedule: Schedule = selectedFilm.schedule.find(
-        (s) => s.id === session,
-      );
-
-      const orderedSeat = `${row}:${seat}`;
-      if (schedule.taken.includes(orderedSeat)) {
-        throw new ConflictException('К сожалению, место уже занято');
+      if (this.config.database.driver === 'mongodb') {
+        selectedFilm = await this.filmsMongoRepository.findFilmById(film);
+      } else if (this.config.database.driver === 'postgres') {
+        selectedFilm = await this.filmsPostgresRepository.findFilmById(film);
       }
 
-      schedule.taken.push(orderedSeat);
+      const schedule = selectedFilm.schedule.find((s) => s.id === session);
+      if (!schedule) throw new BadRequestException('Сеанс не найден');
 
-      await selectedFilm.save();
+      if (row > schedule.rows || seat > schedule.seats)
+        throw new BadRequestException('Выбранного места не существует');
+
+      const bookedPlace = `${row}:${seat}`;
+
+      const isTaken = Array.isArray(schedule.taken)
+        ? schedule.taken.includes(bookedPlace)
+        : schedule.taken.split(',').includes(bookedPlace);
+
+      if (isTaken)
+        throw new ConflictException('К сожалению, место уже занято.');
+
+      if (Array.isArray(schedule.taken)) {
+        schedule.taken.push(bookedPlace);
+      } else {
+        schedule.taken = schedule.taken
+          ? `${schedule.taken},${bookedPlace}`
+          : bookedPlace;
+      }
+
+      if (this.config.database.driver === 'mongodb') {
+        await selectedFilm.save();
+      } else if (this.config.database.driver === 'postgres') {
+        await this.filmsPostgresRepository.save(selectedFilm);
+      }
     }
 
     return {
