@@ -1,5 +1,5 @@
 import { OneToMany, Entity, PrimaryColumn, Generated, Column } from 'typeorm';
-import { ScheduleEntity } from './schedule.entity';
+import { ScheduleEntity } from './Schedule.entity';
 
 @Entity('films')
 export class FilmEntity {

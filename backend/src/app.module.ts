@@ -11,6 +11,7 @@ import { DatabaseModule } from './database/database.module';
 import { FilmsPostgresSQLRepository } from './repository/films.postgres.repository';
 import { filmsProvider } from './films/films.provider';
 import { FilmsMongoDbRepository } from './repository/films.mongodb.repository';
+import { LoggerModule } from './loggers/logger.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { FilmsMongoDbRepository } from './repository/films.mongodb.repository';
       rootPath: path.join(__dirname, '..', 'public'),
     }),
     DatabaseModule,
+    LoggerModule,
   ],
   controllers: [FilmsController, OrderController],
   providers: [

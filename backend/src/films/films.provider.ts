@@ -1,5 +1,5 @@
 import { AppConfig } from 'src/app.config.provider';
-import { FilmEntity } from './entities/film.entity';
+import { FilmEntity } from './entities/Film.entity';
 import { FilmSchema } from './schemas/films.schema';
 
 export const filmsProvider = {

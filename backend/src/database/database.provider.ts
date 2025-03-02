@@ -1,8 +1,8 @@
 import * as mongoose from 'mongoose';
 import { AppConfig } from '../app.config.provider';
 import { DataSource } from 'typeorm';
-import { FilmEntity } from 'src/films/entities/film.entity';
-import { ScheduleEntity } from 'src/films/entities/schedule.entity';
+import { FilmEntity } from 'src/films/entities/Film.entity';
+import { ScheduleEntity } from 'src/films/entities/Schedule.entity';
 
 export const databaseProvider = {
   provide: 'DATA_SOURCE',

@@ -5,7 +5,7 @@ import styles from './Card.module.scss';
 export type CardProps = {
     id: string;
     image: string;
-    title: string;
+    title?: string;
 } & HTMLAttributes<HTMLButtonElement>;
 
 export function Card({ id, image, title, className, ...props }: CardProps) {
