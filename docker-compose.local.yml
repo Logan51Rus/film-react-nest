@@ -1,0 +1,64 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./backend  
+    container_name: backend
+    ports:
+      - "3000:3000"
+    networks:
+      - film_network
+    depends_on:
+      - postgres
+    env_file:
+      - ./backend/.env  
+    restart: unless-stopped
+
+  frontend:
+    build: ./frontend  
+    container_name: frontend
+    ports:
+      - "8081:80"
+    networks:
+      - film_network
+    env_file:
+      - ./frontend/.env  
+    depends_on:
+      - backend  
+
+  postgres:
+    image: postgres:17
+    container_name: postgres
+    environment:
+      POSTGRES_USER: developer
+      POSTGRES_PASSWORD: developer
+      POSTGRES_DB: film_project
+    ports:
+      - "5432:5432"
+    networks:
+      - film_network
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    depends_on:
+      - postgres
+    ports:
+      - "8080:80"
+    networks:
+      - film_network
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: defaultemail@mail.ru
+      PGADMIN_DEFAULT_PASSWORD: securepassword123
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  pgadmin_data:
+
+networks:
+  film_network:
