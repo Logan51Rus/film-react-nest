@@ -1,13 +1,19 @@
 import { ConfigModule } from '@nestjs/config';
 
+const applicationConfig = process.env;
+
 export const configProvider = {
   imports: [ConfigModule.forRoot()],
   provide: 'CONFIG',
   useValue: <AppConfig>{
-    //TODO прочесть переменнные среды
     database: {
-      driver: process.env.DATABASE_DRIVER || 'mongodb',
-      url: process.env.DATABASE_URL || 'mongodb://localhost:27017/afisha',
+      driver: applicationConfig.DATABASE_DRIVER,
+      url: applicationConfig.DATABASE_URL,
+      host: applicationConfig.DATABASE_HOST,
+      port: +applicationConfig.DATABASE_PORT,
+      user: applicationConfig.DATABASE_USER,
+      password: applicationConfig.DATABASE_PASSWORD,
+      name: applicationConfig.DATABASE_NAME,
     },
   },
 };
@@ -19,4 +25,9 @@ export interface AppConfig {
 export interface AppConfigDatabase {
   driver: string;
   url: string;
+  host: string;
+  port: number;
+  user: string;
+  password: string;
+  name: string;
 }

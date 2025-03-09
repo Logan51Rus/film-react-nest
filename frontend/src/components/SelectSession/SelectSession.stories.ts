@@ -10,6 +10,7 @@ const meta = {
   },
   args: {
     onSelect: fn(),
+    selected: null
   },
 } satisfies Meta<typeof SelectSession>;
 

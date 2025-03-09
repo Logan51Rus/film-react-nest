@@ -1,15 +1,12 @@
-import { NotFoundException, Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
+import { NotFoundException, Injectable, Inject } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { GetFilmDto } from 'src/films/dto/films.dto';
-import { Film } from 'src/films/films.schema';
+import { Film } from 'src/films/schemas/films.schema';
 import { GetScheduleDto } from 'src/films/dto/schedule.dto';
 
 @Injectable()
 export class FilmsMongoDbRepository {
-  constructor(
-    @InjectModel(Film.name) private readonly filmModel: Model<Film>,
-  ) {}
+  constructor(@Inject('FILM_REPOSITORY') private filmModel: Model<Film>) {}
 
   private getFilmMapperFn(): (film: Film) => GetFilmDto {
     return (root) => {
@@ -30,7 +27,7 @@ export class FilmsMongoDbRepository {
 
   async getAllFilms(): Promise<{ total: number; items: GetFilmDto[] }> {
     const films = await this.filmModel.find({});
-    const total = await this.filmModel.countDocuments({});
+    const total = films.length;
 
     return {
       total: total,
